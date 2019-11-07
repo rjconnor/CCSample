@@ -2,8 +2,10 @@
 
 <<COMMENT
 ===============================================================
-Deployment Script for ***
-version  0.1 created: *** , 27/9/2019
+Deployment Script for Clyde&Co
+version  0.1 
+created by: Nigel Wardle - CDW
+created: 7/11/2019
 =============================================================
 
 References:
