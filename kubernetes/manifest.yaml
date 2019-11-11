@@ -1,0 +1,48 @@
+# name: k8smanifest.yaml
+# description: deploys application into sandbox namespace and exposes on an Azure internal load balancer
+# author: Nigel Wardle
+# created: 05/11/19
+# modified 05/11/19 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-standard-deployment-1
+  labels:
+    app: python-standard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-standard-replicaset
+  template:
+    metadata:
+      labels:
+        app: python-standard
+    spec:
+      containers:
+      - name: python-standard-container-1
+        image: cdwuk/python-standard:v1.0.0
+        resources: 
+          requests:
+            memory: "250Mi"
+            cpu: "250m"
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-standard-service-1
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "false" # set to true for public IP
+    # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet" # specify subnet
+spec:
+  type: LoadBalancer
+  # loadBalancerIP: 10.240.0.25
+  ports:
+  - port: 80
+  selector:
+    app: python-standard-container-1
