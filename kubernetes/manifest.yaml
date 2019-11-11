@@ -11,7 +11,7 @@ kind: Namespace
 metadata:
   name: sample
 ---
-# create service account that pods will under
+# create service account that pods will run using
 apiVersion: v1
 kind: ServiceAccount
 metadata:
