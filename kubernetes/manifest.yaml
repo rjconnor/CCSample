@@ -4,7 +4,7 @@
 # created: 05/11/19
 # modified 05/11/19 
 ---
-# create service account that pods will under
+# create service account that pods will run using
 apiVersion: v1
 kind: ServiceAccount
 metadata:
