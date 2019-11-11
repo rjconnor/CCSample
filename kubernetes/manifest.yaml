@@ -1,8 +1,16 @@
+# *******************************************************************************************
 # name: k8smanifest.yaml
 # description: deploys application into sandbox namespace and exposes on an Azure internal load balancer
 # author: Nigel Wardle
 # created: 05/11/19
 # modified 05/11/19 
+# *******************************************************************************************
+#
+# create sample namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample
 ---
 # create service account that pods will run using
 apiVersion: v1
@@ -18,12 +26,9 @@ metadata:
  name: sample-role
  namespace: sample
 rules:
- — apiGroups:
-   — ''
- resources:
-   — pods
- verbs:
-   — list
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
 ---
 # bind role to service account
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -36,9 +41,9 @@ roleRef:
  name: sample-role
  apiGroup: rbac.authorization.k8s.io
 subjects:
- — kind: ServiceAccount
-   name: sample
-   namespace: sample
+- kind: ServiceAccount
+  name: sample
+  namespace: sample
 ---
 # create deployment of pods
 apiVersion: apps/v1
@@ -62,7 +67,7 @@ spec:
         runAsUser: 1000
       containers:
       - name: sample
-        image: cdwuk/sample
+        image: nginx
         readinessProbe:
           httpGet:
             path: /
