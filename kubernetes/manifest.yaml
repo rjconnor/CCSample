@@ -1,10 +1,10 @@
-# name: k8smanifest.yaml
+# name: manifest.yaml
 # description: deploys application into sandbox namespace and exposes on an Azure internal load balancer
 # author: Nigel Wardle
 # created: 05/11/19
 # modified 05/11/19 
 ---
-# create service account that pods will run using
+# create service account that pods will under
 apiVersion: v1
 kind: ServiceAccount
 metadata:
