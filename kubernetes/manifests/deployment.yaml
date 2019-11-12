@@ -18,6 +18,9 @@ spec:
       containers:
       - name: sample
         image: nginx
+        env:
+        - name: version
+          value: "1.0"
         readinessProbe:
           httpGet:
             path: /
