@@ -13,5 +13,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in _Layout.cshtml with BuildId'
+  inputs:
+    rootDirectory: app/Pages/Shared/
+    targetFiles: '_Layout.cshtml'
+
+#- script: dotnet build --configuration $(buildConfiguration)
+#  displayName: 'dotnet build $(buildConfiguration)'
