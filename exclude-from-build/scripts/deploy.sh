@@ -14,28 +14,31 @@ https://www.danielstechblog.io/build-azure-kubernetes-service-cluster-with-bring
 COMMENT
 
 # ----------- Define Variables --------------
-SUBSCRIPTIONNAME="Pay-As-You-Go"
-#SUBSCRIPTIONID="a3fb7f8b-a3d4-4e10-bdde-3b475c6688f4" # hotmail account
-SUBSCRIPTIONID="a6ba19a1-6e2f-41c4-918e-34d12ae82ea7" # CDW 
+SUBSCRIPTIONNAME="Clyde & Co - UK - Leap - Sandbox - CDW UK CSP"
+SUBSCRIPTIONID="00bcabe9-0608-46f3-a624-a53c00ecbf5b"
 
 # Set subscription
 az account set --subscription $SUBSCRIPTIONID
 
 ORG='cc'
-ENV='sandbox' 
+ENV='sb' 
 TAGS='environment='$ENV 
-REGION='uk-south' 
+LOCATION="uksouth"
+REGIONSHORT='uks'
 
 # Resource groups
-HUB_RG="${ORG}-${REGION}-rsg-hub-${ENV}"
-SPOKE_RG="${ORG}-${REGION}-rsg-general-${ENV}"
-LOG_ANALYTICS_RG="${ORG}-${REGION}-rg-log-analytics-${ENV}"
+HUB_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-hub"
+AKS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aks"
+ACR_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-acr"
+LOG_ANALYTICS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-la"
+
 echo $HUB_RG
-echo $SPOKE_RG
+echo $AKS_RG
+echo $ACR_RG
 echo $LOG_ANALYTICS_RG
 
 #Log analytics
-AKS_WORKSPACE_RESOURCE_ID="${ORG}-${REGION}-ws-logid"
+AKS_WORKSPACE_RESOURCE_ID="${ORG}-${REGIONSHORT}-ws-logid"
 echo $AKS_WORKSPACE_RESOURCE_ID
 
 #AAD
@@ -45,7 +48,7 @@ AAD_CLIENT_APP_ID="f8fa4e02-9c7a-4572-b6f0-3e91087c17cf"
 AAD_TENANT_ID="25147810-97f7-4466-a0c7-34f1b29006a3"
 
 # SQL
-SQL_NAME="${ORG}-${REGION}-sqlmi-${ENV}-01"
+SQL_NAME="${ORG}-${REGIONSHORT}-sqlmi-${ENV}-01"
 SQL_USERNAME="clydeandcosbadmin"
 SQL_PASSWORD="Zxcvbnm12345#####"
 echo $SQL_NAME
@@ -53,40 +56,38 @@ echo $SQL_USERNAME
 echo $SQL_PASSWORD
 
 #VNET
-HUB_VNET_NAME="${ORG}-${REGION}-vnet-hub-${ENV}"
+HUB_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-hub-01"
 HUB_VNET_ADDRESS_PREFIX="10.0.0.0/16"
 echo $HUB_VNET_NAME
 
-SPOKE_VNET_NAME="${ORG}-${REGION}-vnet-${ENV}"
+SPOKE_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-leap-${ENV}-01"
 SPOKE_VNET_ADDRESS_PREFIX="10.1.0.0/16"
 echo $SPOKE_VNET_NAME
 
 #SUBNET
-GW_SUBNET_NAME="${ORG}-${REGION}-snet-gw"
+GW_SUBNET_NAME="${ORG}-${REGIONSHORT}-snet-gw"
 GW_SUBNET_ADDRESS_PREFIX="10.0.0.0/24"
-GW_NSG_NAME="${ORG}-${REGION}-nsg-gw"
+GW_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-gw"
 echo $GW_SUBNET_NAME
 echo $GW_NSG_NAME
 
-SQL_SUBNET_NAME="${ORG}-${REGION}-subnet-sql-${ENV}"
+SQL_SUBNET_NAME="${ORG}-${REGIONSHORT}-subnet-sql-${ENV}"
 SQL_SUBNET_ADDRESS_PREFIX="10.1.0.0/24"
-SQL_NSG_NAME="${ORG}-${REGION}-nsg-sql"
+SQL_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-sql"
 echo $SQL_SUBNET_NAME
 echo $SQL_NSG_NAME
 
-AKS_SUBNET_NAME="${ORG}-${REGION}-subnet-aks-${ENV}"
+AKS_SUBNET_NAME="${ORG}-${REGIONSHORT}-subnet-aks-${ENV}"
 AKS_SUBNET_ADDRESS_PREFIX="10.1.1.0/24"
-AKS_NSG_NAME="${ORG}-${REGION}-nsg-aks"
+AKS_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-aks"
 echo $AKS_SUBNET_NAME
 echo $AKS_NSG_NAME
 
 #ACR
-ACR_NAME="ccacrwesteuropenonprod"
+ACR_NAME="ccukssbacr"
 
 #AKS
-AKS_RG="${ORG}-${REGION}-rsg-aks-${ENV}"
-LOCATION="westeurope"
-AKS_CLUSTER_NAME="${ORG}-${REGION}-aks-${ENV}-01"
+AKS_CLUSTER_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-aks-01"
 AKS_NODE_COUNT="1"
 AKS_MAX_PODS="50"
 AKS_SERVICE_CIDR="10.0.0.0/16"
@@ -189,7 +190,7 @@ az network vnet subnet create \
     --network-security-group $AKS_NSG_NAME 
 
 # ---------------- Create ACR ------------------------
-az acr create --name $ACR_NAME --resource-group $SPOKE_RG --sku Standard --location $LOCATION --subscription $SUBSCRIPTIONID --tags $TAGS
+az acr create --name $ACR_NAME --resource-group $ACR_RG --sku Standard --location $LOCATION --subscription $SUBSCRIPTIONID --tags $TAGS
     
 # ------------ Create AKS Cluster --------------------
 az aks create \
