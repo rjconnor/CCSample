@@ -15,5 +15,15 @@ namespace test
 
             Assert.IsTrue(string.Compare(name, cat.Name, true) == 0);
         }
+
+        [TestMethod]
+        public void TestAnimalNoise()
+        {
+            var name = "tiddles";
+
+            var cat = new Tiger { Name = name };
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(cat.MakeNoise()));
+        }
     }
 }
