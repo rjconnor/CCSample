@@ -16,4 +16,4 @@ RUN dotnet publish "sampleapp.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "sampleapp.dll"]
+ENTRYPOINT ["dotnet", "sampleapp.dll"] 
