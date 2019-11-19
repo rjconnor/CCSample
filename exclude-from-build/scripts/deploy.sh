@@ -85,16 +85,19 @@ echo $AKS_NSG_NAME
 
 #ACR
 ACR_NAME="ccukssbacr"
+echo $ACR_NAME
 
 #AKS
 AKS_CLUSTER_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-aks-01"
-AKS_NODE_COUNT="1"
-AKS_MAX_PODS="50"
+AKS_NODE_COUNT="3"
+AKS_MAX_PODS="30"
 AKS_SERVICE_CIDR="10.0.0.0/16"
 AKS_DNS_SERVICE_IP="10.0.0.10"
 AKS_DOCKER_BRIDGE_ADDRESS="172.17.0.1/16"
+AKS_VERSION="1.14.8"
 echo $AKS_RG
 echo $AKS_CLUSTER_NAME
+echo $AKS_VERSION
 
 
 # ----------- Create Resource Groups --------------
@@ -211,6 +214,7 @@ az aks create \
   --dns-service-ip $AKS_DNS_SERVICE_IP \
   --docker-bridge-address $AKS_DOCKER_BRIDGE_ADDRESS \
   --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$SPOKE_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
+  --kubernetes-version $AKS_VERSION \
   --tags $TAGS
 
   # ---------------- Create SQL Managed Instance -------------
