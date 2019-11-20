@@ -30,10 +30,12 @@ REGIONSHORT='uks'
 HUB_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-hub"
 AKS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aks"
 ACR_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-acr"
+NW_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-network"
 
 echo $HUB_RG
 echo $AKS_RG
 echo $ACR_RG
+echo $NW_RG
 echo $LOG_ANALYTICS_RG
 
 #Log analytics
@@ -212,9 +214,8 @@ az aks create \
   --service-cidr $AKS_SERVICE_CIDR \
   --dns-service-ip $AKS_DNS_SERVICE_IP \
   --docker-bridge-address $AKS_DOCKER_BRIDGE_ADDRESS \
-  --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$AKS_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
+  --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$NW_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
   --kubernetes-version $AKS_VERSION \
-  --workspace-resource-id $AKS_WORKSPACE_RESOURCE_ID \
   --tags $TAGS
 
 #https://go.microsoft.com/fwlink/?linkid=871071
