@@ -30,7 +30,6 @@ REGIONSHORT='uks'
 HUB_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-hub"
 AKS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aks"
 ACR_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-acr"
-LOG_ANALYTICS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-la"
 
 echo $HUB_RG
 echo $AKS_RG
@@ -38,14 +37,14 @@ echo $ACR_RG
 echo $LOG_ANALYTICS_RG
 
 #Log analytics
-AKS_WORKSPACE_RESOURCE_ID="${ORG}-${REGIONSHORT}-ws-logid"
+AKS_WORKSPACE_RESOURCE_ID="d483b453-44f8-47d6-8881-1e104703a0b7"
 echo $AKS_WORKSPACE_RESOURCE_ID
 
 #AAD
-AAD_SERVER_APP_ID="fd6b91c3-b64f-4f70-8ff7-de3daf0ccb2b"
-AAD_SERVER_APP_SECRET="gQZh?aq3jUlqXBEWq82xNd7?@SQZ.@-K"
-AAD_CLIENT_APP_ID="f8fa4e02-9c7a-4572-b6f0-3e91087c17cf"
-AAD_TENANT_ID="25147810-97f7-4466-a0c7-34f1b29006a3"
+AAD_SERVER_APP_ID="d99f8e30-6873-4219-8981-94c2473d32b8"
+AAD_SERVER_APP_SECRET="pCS/QMoM9QgN9uFJ08GmbQ?[WGawOEm?"
+AAD_CLIENT_APP_ID="6d121ab4-7a85-4288-a7b6-e1cc8fa8b555"
+AAD_TENANT_ID="eb5e156e-540c-42da-8f8c-0cd5639f036a"
 
 # SQL
 SQL_NAME="${ORG}-${REGIONSHORT}-sqlmi-${ENV}-01"
@@ -57,7 +56,7 @@ echo $SQL_PASSWORD
 
 #VNET
 HUB_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-hub-01"
-HUB_VNET_ADDRESS_PREFIX="10.0.0.0/16"
+HUB_VNET_ADDRESS_PREFIX="10.125.240.0/20"
 echo $HUB_VNET_NAME
 
 SPOKE_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-leap-${ENV}-01"
@@ -77,8 +76,8 @@ SQL_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-sql"
 echo $SQL_SUBNET_NAME
 echo $SQL_NSG_NAME
 
-AKS_SUBNET_NAME="${ORG}-${REGIONSHORT}-subnet-aks-${ENV}"
-AKS_SUBNET_ADDRESS_PREFIX="10.1.1.0/24"
+AKS_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-aks-01"
+AKS_SUBNET_ADDRESS_PREFIX="10.125.0.0/22"
 AKS_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-aks"
 echo $AKS_SUBNET_NAME
 echo $AKS_NSG_NAME
@@ -213,12 +212,10 @@ az aks create \
   --service-cidr $AKS_SERVICE_CIDR \
   --dns-service-ip $AKS_DNS_SERVICE_IP \
   --docker-bridge-address $AKS_DOCKER_BRIDGE_ADDRESS \
-  --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$SPOKE_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
+  --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$AKS_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
   --kubernetes-version $AKS_VERSION \
+  --workspace-resource-id $AKS_WORKSPACE_RESOURCE_ID \
   --tags $TAGS
-
-  # ---------------- Create SQL Managed Instance -------------
-#https://techcommunity.microsoft.com/t5/Azure-SQL-Database/How-to-configure-network-for-Azure-SQL-Managed-Instance/ba-p/386196
 
 #https://go.microsoft.com/fwlink/?linkid=871071
 
