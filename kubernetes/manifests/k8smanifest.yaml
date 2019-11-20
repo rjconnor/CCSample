@@ -54,7 +54,7 @@ spec:
       serviceAccountName: sample
       containers:
       - name: sample
-        image: acr/sample:latest
+        image: ccukssbacr.azurecr.io/sample:0.20191115.7
         env:
         - name: version
           value: "1.0"
@@ -86,7 +86,7 @@ kind: Service
 metadata:
   name: sample
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "false" # set to true for public IP
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true" # set to true for public IP
     # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet" # specify subnet
 spec:
   type: LoadBalancer
