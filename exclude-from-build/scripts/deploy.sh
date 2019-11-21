@@ -27,19 +27,23 @@ LOCATION="uksouth"
 REGIONSHORT='uks'
 
 # Resource groups
+GEN_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}"
 HUB_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-hub"
 AKS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aks"
 ACR_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-acr"
 NW_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-network"
 
+WORKSPACE_NAME="${ORG}-${REGIONSHORT}-law-leap-${ENV}-001"
+
 echo $HUB_RG
 echo $AKS_RG
 echo $ACR_RG
 echo $NW_RG
-echo $LOG_ANALYTICS_RG
+echo $WORKSPACE_NAME
 
 #Log analytics
-AKS_WORKSPACE_RESOURCE_ID="d483b453-44f8-47d6-8881-1e104703a0b7"
+
+AKS_WORKSPACE_RESOURCE_ID="/subscriptions/$SUBSCRIPTIONID/resourcegroups/$GEN_RG/providers/Microsoft.OperationalInsights/workspaces/$WORKSPACE_NAME"
 echo $AKS_WORKSPACE_RESOURCE_ID
 
 #AAD
@@ -216,6 +220,7 @@ az aks create \
   --docker-bridge-address $AKS_DOCKER_BRIDGE_ADDRESS \
   --vnet-subnet-id /subscriptions/$SUBSCRIPTIONID/resourceGroups/$NW_RG/providers/Microsoft.Network/virtualNetworks/$SPOKE_VNET_NAME/subnets/$AKS_SUBNET_NAME \
   --kubernetes-version $AKS_VERSION \
+  --workspace-resource-id $AKS_WORKSPACE_RESOURCE_ID \
   --tags $TAGS
 
 #https://go.microsoft.com/fwlink/?linkid=871071
