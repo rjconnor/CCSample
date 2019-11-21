@@ -11,16 +11,18 @@ metadata:
   name: sample
 automountServiceAccountToken: false
 ---
+# create role that PODs will be assigned
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
  name: sample-role
  namespace: sample
 rules:
-- apiGroups: [""] # "" indicates the core API group
+- apiGroups: [""]
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
 ---
+# Bind role to sample service account
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
@@ -35,6 +37,7 @@ subjects:
   name: sample
   namespace: sample
 ---
+# Deploy 2 instances of image
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,7 +57,7 @@ spec:
       serviceAccountName: sample
       containers:
       - name: sample
-        image: ccukssbacr.azurecr.io/sample:0.20191115.7
+        image: ccukssbacr.azurecr.io/sample:#{Build.BuildId}#
         env:
         - name: version
           value: "1.0"
