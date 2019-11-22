@@ -22,7 +22,9 @@ az account set --subscription $SUBSCRIPTIONID
 
 ORG='cc'
 ENV='sb' 
-TAGS='environment='$ENV 
+TAGS="environment=$ENV id=- name=- Application-Taxonomy=- Billed-To=- IT-Owner-Contact=- Business-Owner-Contact=- Days-Operational=0 Hours-Operational=0 Service=-"
+echo $TAGS
+
 LOCATION="uksouth"
 REGIONSHORT='uks'
 
@@ -42,7 +44,6 @@ echo $NW_RG
 echo $WORKSPACE_NAME
 
 #Log analytics
-
 AKS_WORKSPACE_RESOURCE_ID="/subscriptions/$SUBSCRIPTIONID/resourcegroups/$GEN_RG/providers/Microsoft.OperationalInsights/workspaces/$WORKSPACE_NAME"
 echo $AKS_WORKSPACE_RESOURCE_ID
 
@@ -99,7 +100,7 @@ AKS_MAX_PODS="30"
 AKS_SERVICE_CIDR="10.125.4.0/24"
 AKS_DNS_SERVICE_IP="10.125.4.254"
 AKS_DOCKER_BRIDGE_ADDRESS="10.125.5.1/28"
-AKS_VERSION="1.14.8"
+AKS_VERSION="1.13.12"
 echo $AKS_RG
 echo $AKS_CLUSTER_NAME
 echo $AKS_VERSION
@@ -246,6 +247,26 @@ az sql mi create \
     --family Gen5 \
     --license-type LicenseIncluded \
     --storage 32GB
+
+
+az aks get-credentials --resource-group $AKS_RG --name $AKS_CLUSTER_NAME
+
+# Get the resource ID of your AKS cluster
+AKS_CLUSTER=$(az aks show --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --query id -o tsv)
+# Get the account credentials for the logged in user
+ACCOUNT_UPN=$(az account show --query user.name -o tsv)
+
+ACCOUNT_ID=$(az ad user show --upn-or-object-id $ACCOUNT_UPN --query objectId -o tsv)
+
+echo $ACCOUNT_UPN
+echo $AKS_CLUSTER
+echo $ACCOUNT_ID
+
+# Assign the 'Cluster Admin' role to the logged in user
+az role assignment create \
+    --assignee $ACCOUNT_ID \
+    --scope $AKS_CLUSTER \
+    --role "Azure Kubernetes Service Cluster Admin Role"
 
 # end
 
