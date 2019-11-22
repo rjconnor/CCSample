@@ -57,7 +57,7 @@ spec:
       serviceAccountName: sample
       containers:
       - name: sample
-        image: ccukssbacr.azurecr.io/sample:#{Build.BuildId}#
+        image: ccukssbacr.azurecr.io/sample:#{Build.BuildNumber}#
         env:
         - name: version
           value: "1.0"

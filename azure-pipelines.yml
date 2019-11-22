@@ -14,7 +14,7 @@ variables:
 
 steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
-  displayName: 'Replace tokens in _Layout.cshtml with BuildId'
+  displayName: 'Replace tokens in _Layout.cshtml with BuildNumber'
   inputs:
     rootDirectory: sampleapp/Pages/Shared/
     targetFiles: '_Layout.cshtml'
