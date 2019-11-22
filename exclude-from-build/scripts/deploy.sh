@@ -198,7 +198,13 @@ az network vnet subnet create \
     --network-security-group $AKS_NSG_NAME 
 
 # ---------------- Create ACR ------------------------
-az acr create --name $ACR_NAME --resource-group $ACR_RG --sku Standard --location $LOCATION --subscription $SUBSCRIPTIONID --tags $TAGS
+az acr create \
+  --name $ACR_NAME \
+  --resource-group $ACR_RG \
+  --sku Standard \
+  --location $LOCATION \
+  --subscription $SUBSCRIPTIONID \
+  --tags $TAGS
     
 # ------------ Create AKS Cluster --------------------
 az aks create \
