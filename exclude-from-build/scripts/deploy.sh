@@ -248,8 +248,9 @@ az sql mi create \
     --license-type LicenseIncluded \
     --storage 32GB
 
-
-az aks get-credentials --resource-group $AKS_RG --name $AKS_CLUSTER_NAME
+az aks get-credentials \
+    --resource-group $AKS_RG 
+    --name $AKS_CLUSTER_NAME
 
 # Get the resource ID of your AKS cluster
 AKS_CLUSTER=$(az aks show --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --query id -o tsv)
@@ -268,5 +269,4 @@ az role assignment create \
     --scope $AKS_CLUSTER \
     --role "Azure Kubernetes Service Cluster Admin Role"
 
-# end
 
