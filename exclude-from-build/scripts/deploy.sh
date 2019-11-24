@@ -12,6 +12,7 @@ https://docs.microsoft.com/en-us/azure/aks/azure-ad-integration
 https://www.danielstechblog.io/build-azure-kubernetes-service-cluster-with-bring-your-own-virtual-network-on-azure/
 
 COMMENT
+echo off
 
 SUBSCRIPTIONNAME="Clyde & Co - UK - Leap - Sandbox - CDW UK CSP"
 SUBSCRIPTIONID="00bcabe9-0608-46f3-a624-a53c00ecbf5b"
@@ -21,7 +22,7 @@ az account set --subscription $SUBSCRIPTIONID
 ORG="cc"
 ENV="sb" 
 EnvFull="Sandbox"
-TAGS="Environment=$EnvFull Application-Taxonomy=- Billed-Internally-To=- IT-Owner-Contact=- Business-Owner-Contact=- Days-Operational=0 Hours-Operational=0 Service=-"
+TAGS="Environment=$EnvFull Application-Taxonomy=- Billed-To=- IT-Owner-Contact=- Business-Owner-Contact=- Days-Operational=0 Hours-Operational=0 Service=-"
 LOCATION="uksouth"
 REGIONSHORT='uks'
 
