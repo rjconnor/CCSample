@@ -22,7 +22,7 @@ az account set --subscription $SUBSCRIPTIONID
 ORG="cc"
 ENV="sb" 
 EnvFull="Sandbox"
-TAGS="Environment=$EnvFull Application-Taxonomy=- Billed-To=- IT-Owner-Contact=- Business-Owner-Contact=- Days-Operational=0 Hours-Operational=0 Service=-"
+TAGS="Environment=$EnvFull Application-Taxonomy= Billed-Internally-To= IT-Owner-Contact= Business-Owner-Contact= Days-Operational= Hours-Operational=0 Service="
 LOCATION="uksouth"
 REGIONSHORT='uks'
 
