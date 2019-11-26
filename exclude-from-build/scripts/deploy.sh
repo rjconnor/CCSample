@@ -98,7 +98,7 @@ echo $AKS_CLUSTER_NAME
 echo $AKS_VERSION
 echo $ACR_NAME
 
-# DO STUFF FROM HERE
+# now optionally pick and choose which resources you want to install
 
 # ----------- Create Resource Groups --------------
 az group create --location $LOCATION --name $HUB_RG --tags $TAGS
@@ -239,8 +239,9 @@ az sql mi create \
     --storage 32GB
 
 az aks get-credentials \
-    --resource-group $AKS_RG 
-    --name $AKS_CLUSTER_NAME
+    --resource-group $AKS_RG \
+    --name $AKS_CLUSTER_NAME \
+    --overwrite-existing
 
 # Get the resource ID of your AKS cluster
 AKS_CLUSTER=$(az aks show --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --query id -o tsv)
@@ -258,5 +259,11 @@ az role assignment create \
     --assignee $ACCOUNT_ID \
     --scope $AKS_CLUSTER \
     --role "Azure Kubernetes Service Cluster Admin Role"
+
+az ad user show --upn-or-object-id nigel.wardle@clydeandco.onmicrosoft.com --query objectId -o tsv
+
+#84a27076-a246-4e98-8590-58822ad2f74f
+
+kubectl config delete-context cc-uks-aks-leap-sb-01
 
 
