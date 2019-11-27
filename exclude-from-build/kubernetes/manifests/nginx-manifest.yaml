@@ -57,6 +57,29 @@ spec:
       containers:
       - name: nginx
         image: nginx
+        env:
+        - name: version
+          value: "1.0"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources: 
+          requests:
+            memory: "500Mi"
+            cpu: "500m"
+          limits:
+            memory: "750Mi"
+            cpu: "750m"
+        ports:
         - containerPort: 80
 ---
 apiVersion: v1

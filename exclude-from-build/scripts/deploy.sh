@@ -281,6 +281,11 @@ az aks browse --name cc-uks-aks-leap-sb-01 --resource-group cc-uks-rsg-leap-sb-a
 # make Dashboard publically writable - DONT DO THIS!!
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 
+# make Daskboard Read only with the following 2 commands
+kubectl apply -f dashboard-viewonly-ClusterRole.yaml
+
+kubectl apply -f dashboard-viewonly-ClusterRoleBinding.yaml
+
 # scale NodePool
 az aks nodepool scale \
     --resource-group cc-demo-rg \
