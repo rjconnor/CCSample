@@ -286,6 +286,9 @@ kubectl apply -f dashboard-viewonly-ClusterRole.yaml
 
 kubectl apply -f dashboard-viewonly-ClusterRoleBinding.yaml
 
+# link ACR if not already linked to AKS
+az aks update -n cc-uks-aks-leap-sb-01 -g cc-uks-rsg-leap-sb-aks --attach-acr ccukssbacr
+
 # scale NodePool
 az aks nodepool scale \
     --resource-group cc-demo-rg \

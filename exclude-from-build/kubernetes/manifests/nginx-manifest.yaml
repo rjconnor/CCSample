@@ -2,13 +2,14 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sample
+  name: sample-nginx
 ---
 # create service account that pods will run using
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: sample
+  name: sample-nginx
+  namespace: sample-nginx
 automountServiceAccountToken: false
 ---
 # create role that PODs will be assigned
@@ -16,7 +17,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
  name: sample-role
- namespace: sample
+ namespace: sample-nginx
 rules:
 - apiGroups: [""]
   resources: ["pods"]
@@ -27,70 +28,50 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
  name: sample-rolebinding
- namespace: sample
+ namespace: sample-nginx
 roleRef:
  kind: Role
  name: sample-role
  apiGroup: rbac.authorization.k8s.io
 subjects:
 - kind: ServiceAccount
-  name: sample
-  namespace: sample
+  name: sample-nginx
+  namespace: sample-nginx
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: sample-nginx
+  namespace: sample-nginx
   labels:
-    app: nginx
+    app: sample-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
+      app: sample-nginx
   template:
     metadata:
       labels:
-        app: nginx
+        app: sample-nginx
     spec:
-      serviceAccountName: sample
+      serviceAccountName: sample-nginx
       containers:
-      - name: nginx
+      - name: sample-nginx
         image: nginx
-        env:
-        - name: version
-          value: "1.0"
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        resources: 
-          requests:
-            memory: "500Mi"
-            cpu: "500m"
-          limits:
-            memory: "750Mi"
-            cpu: "750m"
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: sample-nginx
+  namespace: sample-nginx
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal: "false"
 spec:
   type: LoadBalancer
   ports:
   - port: 80
   selector:
-    app: nginx
+    app: sample-nginx
