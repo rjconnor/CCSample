@@ -241,6 +241,14 @@ az sql mi create \
 
 # helper commands
 
+# nigel wardle account id
+#84a27076-a246-4e98-8590-58822ad2f74f
+
+kubectl config view
+
+# clear local config for sb AKS
+kubectl config delete-context cc-uks-aks-leap-sb-01
+
 az account set --subscription 00bcabe9-0608-46f3-a624-a53c00ecbf5b
 
 az aks get-credentials --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --overwrite-existing
@@ -265,14 +273,22 @@ az role assignment create \
 
 az ad user show --upn-or-object-id nigel.wardle@clydeandco.onmicrosoft.com --query objectId -o tsv
 
-# nigel wardle account id
-#84a27076-a246-4e98-8590-58822ad2f74f
+# launch kubernetes Dashboard for sb
+az aks browse --name cc-uks-aks-leap-sb-01 --resource-group cc-uks-rsg-leap-sb-aks
 
-kubectl config view
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 
-kubectl config delete-context cc-uks-aks-leap-sb-01
+# scale NodePool
+az aks nodepool scale \
+    --resource-group cc-demo-rg \
+    --cluster-name k8scc \
+    --name mynodepool \
+    --node-count 1 \
+    --no-wait
 
-# launch kubernetes Dashboard
-az aks browse
+# helm stuff
+kubectl apply -f helm-rbac.yaml
+
+helm init --history-max 200 --service-account tiller --node-selectors "beta.kubernetes.io/os=linux"
 
 
