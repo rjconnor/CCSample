@@ -3,8 +3,33 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+#trigger:
+#- master
+
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - sampleapp/*
+    - test/*
+    exclude:
+    - exclude-from-build/*
+
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily midnight build
+  branches:
+    include:
+    - master
+- cron: "0 12 * * 0"
+  displayName: Weekly Sunday build
+  branches:
+    include:
+    - master
+  always: true
 
 pool:
   vmImage: 'ubuntu-latest'
