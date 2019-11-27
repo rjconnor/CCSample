@@ -1,0 +1,73 @@
+# create sample namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample
+---
+# create service account that pods will run using
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample
+automountServiceAccountToken: false
+---
+# create role that PODs will be assigned
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+ name: sample-role
+ namespace: sample
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+# Bind role to sample service account
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+ name: sample-rolebinding
+ namespace: sample
+roleRef:
+ kind: Role
+ name: sample-role
+ apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: sample
+  namespace: sample
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      serviceAccountName: sample
+      containers:
+      - name: nginx
+        image: nginx
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: nginx

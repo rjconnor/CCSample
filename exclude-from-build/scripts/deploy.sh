@@ -35,9 +35,9 @@ NW_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-network"
 WORKSPACE_NAME="${ORG}-${REGIONSHORT}-law-leap-${ENV}-001"
 AKS_WORKSPACE_RESOURCE_ID="/subscriptions/$SUBSCRIPTIONID/resourcegroups/$GEN_RG/providers/Microsoft.OperationalInsights/workspaces/$WORKSPACE_NAME"
 
-AAD_SERVER_APP_ID="d99f8e30-6873-4219-8981-94c2473d32b8"
-AAD_SERVER_APP_SECRET="pCS/QMoM9QgN9uFJ08GmbQ?[WGawOEm?"
-AAD_CLIENT_APP_ID="6d121ab4-7a85-4288-a7b6-e1cc8fa8b555"
+AAD_SERVER_APP_ID="942f337c-715a-4e23-906a-ca721feb7a96"
+AAD_SERVER_APP_SECRET="bf1UPRsA2.mm8sM9WClrAlZ?N?UclRv?"
+AAD_CLIENT_APP_ID="365a4004-79f3-4ff1-9758-7bbc4676ddea"
 AAD_TENANT_ID="eb5e156e-540c-42da-8f8c-0cd5639f036a"
 
 SQL_NAME="${ORG}-${REGIONSHORT}-sqlmi-${ENV}-01"
@@ -65,12 +65,12 @@ AKS_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-${ENV}-snet-aks-01"
 ACR_NAME="ccukssbacr"
 
 AKS_CLUSTER_NAME="${ORG}-${REGIONSHORT}-aks-leap-${ENV}-01"
-AKS_NODE_COUNT="3"
+AKS_NODE_COUNT="1"
 AKS_MAX_PODS="30"
 AKS_SERVICE_CIDR="10.125.4.0/24"
 AKS_DNS_SERVICE_IP="10.125.4.254"
 AKS_DOCKER_BRIDGE_ADDRESS="10.125.5.1/28"
-AKS_VERSION="1.13.12"
+AKS_VERSION="1.14.8"
 
 echo $ENV
 echo $EnvFull
@@ -244,6 +244,8 @@ az sql mi create \
 # nigel wardle account id
 #84a27076-a246-4e98-8590-58822ad2f74f
 
+kubectl apply -f rbac-aad-user.yaml
+
 kubectl config view
 
 # clear local config for sb AKS
@@ -251,7 +253,7 @@ kubectl config delete-context cc-uks-aks-leap-sb-01
 
 az account set --subscription 00bcabe9-0608-46f3-a624-a53c00ecbf5b
 
-az aks get-credentials --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --overwrite-existing
+az aks get-credentials --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --overwrite-existing --admin
 
 # Get the resource ID of your AKS cluster
 AKS_CLUSTER=$(az aks show --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --query id -o tsv)
@@ -276,6 +278,7 @@ az ad user show --upn-or-object-id nigel.wardle@clydeandco.onmicrosoft.com --que
 # launch kubernetes Dashboard for sb
 az aks browse --name cc-uks-aks-leap-sb-01 --resource-group cc-uks-rsg-leap-sb-aks
 
+# make Dashboard publically writable - DONT DO THIS!!
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 
 # scale NodePool
@@ -286,7 +289,9 @@ az aks nodepool scale \
     --node-count 1 \
     --no-wait
 
-# helm stuff
+
+
+# helm stuff ====================
 kubectl apply -f helm-rbac.yaml
 
 helm init --history-max 200 --service-account tiller --node-selectors "beta.kubernetes.io/os=linux"
