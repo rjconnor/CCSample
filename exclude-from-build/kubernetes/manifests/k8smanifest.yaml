@@ -9,6 +9,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: sample
+  namespace: sample
 automountServiceAccountToken: false
 ---
 # create role that PODs will be assigned
@@ -42,10 +43,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sample
+  namespace: sample
   labels:
     app: sample
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: sample
@@ -88,6 +90,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sample
+  namespace: sample
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true" # set to true for public IP
     # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet" # specify subnet
