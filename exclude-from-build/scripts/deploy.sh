@@ -238,13 +238,16 @@ az sql mi create \
     --license-type LicenseIncluded \
     --storage 32GB
 
-az aks get-credentials \
-    --resource-group $AKS_RG \
-    --name $AKS_CLUSTER_NAME \
-    --overwrite-existing
+
+# helper commands
+
+az account set --subscription 00bcabe9-0608-46f3-a624-a53c00ecbf5b
+
+az aks get-credentials --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --overwrite-existing
 
 # Get the resource ID of your AKS cluster
 AKS_CLUSTER=$(az aks show --resource-group cc-uks-rsg-leap-sb-aks --name cc-uks-aks-leap-sb-01 --query id -o tsv)
+
 # Get the account credentials for the logged in user
 ACCOUNT_UPN=$(az account show --query user.name -o tsv)
 
@@ -262,8 +265,14 @@ az role assignment create \
 
 az ad user show --upn-or-object-id nigel.wardle@clydeandco.onmicrosoft.com --query objectId -o tsv
 
+# nigel wardle account id
 #84a27076-a246-4e98-8590-58822ad2f74f
 
+kubectl config view
+
 kubectl config delete-context cc-uks-aks-leap-sb-01
+
+# launch kubernetes Dashboard
+az aks browse
 
 
