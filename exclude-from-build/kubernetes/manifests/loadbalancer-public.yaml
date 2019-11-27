@@ -1,9 +1,10 @@
 ---
-# expose pods to service on private IP
+# expose pods to service on public IP
 apiVersion: v1
 kind: Service
 metadata:
   name: sample-public
+   namespace: sample
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "false" # set to true for public IP
     # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet" # specify subnet
