@@ -7,10 +7,8 @@ metadata:
   namespace: sample
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "false" # set to true for private IP
-    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "cc-uks-leap-sb-snet-plb-01" # specify subnet
 spec:
   type: LoadBalancer
-  loadBalancerIP: 10.125.6.40
   ports:
   - port: 80
   selector:
