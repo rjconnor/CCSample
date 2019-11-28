@@ -96,7 +96,6 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "cc-uks-leap-sb-snet-ilb-01" # specify subnet
 spec:
   type: LoadBalancer
-  #loadBalancerIP: 10.125.6.7
   ports:
   - port: 80
   selector:
