@@ -1,5 +1,3 @@
----
-# expose pods to service on public IP
 apiVersion: v1
 kind: Service
 metadata:
