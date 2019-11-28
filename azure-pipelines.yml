@@ -37,6 +37,8 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+# This Replace Token task is here for example only as this build is not used by
+# the release. In Prod this could be used to replace secret strings in web.config files
 steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in _Layout.cshtml with BuildNumber'
