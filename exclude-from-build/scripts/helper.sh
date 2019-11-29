@@ -33,6 +33,9 @@ az role assignment create \
 
 az ad user show --upn-or-object-id nigel.wardle@clydeandco.onmicrosoft.com --query objectId -o tsv
 
+# assign Network Contributor role to AKS Service Principle to RG that hosts the VNET- need this to specify ILB subnet for service 
+az role assignment create --assignee caa68f4b-b41e-4d36-9000-c2a3f3606a19 --role "Network Contributor" --resource-group cc-uks-rsg-leap-sb-network
+
 # launch kubernetes Dashboard for sb
 az aks browse --name cc-uks-aks-leap-sb-01 --resource-group cc-uks-rsg-leap-sb-aks
 

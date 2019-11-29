@@ -41,26 +41,29 @@ AAD_CLIENT_APP_ID="365a4004-79f3-4ff1-9758-7bbc4676ddea"
 AAD_TENANT_ID="eb5e156e-540c-42da-8f8c-0cd5639f036a"
 
 SQL_NAME="${ORG}-${REGIONSHORT}-sqlmi-${ENV}-01"
-SQL_USERNAME="clydeandcosbadmin"
-SQL_PASSWORD="Zxcvbnm12345#####"
+SQL_USERNAME="xxxxx"
+SQL_PASSWORD="yyyyy"
 
 HUB_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-hub-01"
 HUB_VNET_ADDRESS_PREFIX="10.125.240.0/20"
 
 SPOKE_VNET_NAME="${ORG}-${REGIONSHORT}-vnet-leap-${ENV}-01"
-SPOKE_VNET_ADDRESS_PREFIX="10.1.0.0/16"
+SPOKE_VNET_ADDRESS_PREFIX="10.125.0.0/21"
 
 GW_SUBNET_NAME="${ORG}-${REGIONSHORT}-snet-gw"
-GW_SUBNET_ADDRESS_PREFIX="10.0.0.0/24"
+GW_SUBNET_ADDRESS_PREFIX="xxxx"
 GW_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-gw"
 
 SQL_SUBNET_NAME="${ORG}-${REGIONSHORT}-subnet-sql-${ENV}"
-SQL_SUBNET_ADDRESS_PREFIX="10.1.0.0/24"
+SQL_SUBNET_ADDRESS_PREFIX="10.125.6.64/27"
 SQL_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-sql"
 
 AKS_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-aks-01"
 AKS_SUBNET_ADDRESS_PREFIX="10.125.0.0/22"
 AKS_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-${ENV}-snet-aks-01"
+
+ILB_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-sql-mi-01"
+ILB_SUBNET_ADDRESS_PREFIX="10.125.6.64/27"
 
 ACR_NAME="ccukssbacr"
 
@@ -89,6 +92,7 @@ echo $GW_NSG_NAME
 echo $SQL_SUBNET_NAME
 echo $SQL_NSG_NAME
 echo $AKS_SUBNET_NAME
+echo $ILB_SUBNET_NAME
 echo $AKS_NSG_NAME
 echo $SQL_NAME
 echo $SQL_USERNAME
@@ -168,15 +172,14 @@ az network vnet subnet create \
 
 # ---------------- Create Spoke NSG & SQL Subnet ---------------
 
-# coomented as SQL MI not want this at insrtallation
+# coomented as SQL MI should not have this at installation time
 #az network nsg create -g $SPOKE_RG -n $SQL_NSG_NAME --tags $TAGS
 
 az network vnet subnet create \
     --resource-group $SPOKE_RG \
     --vnet-name $SPOKE_VNET_NAME \
     --name $SQL_SUBNET_NAME \
-    --address-prefixes $SQL_SUBNET_ADDRESS_PREFIX # \
-#    --network-security-group $SQL_NSG_NAME 
+    --address-prefixes $SQL_SUBNET_ADDRESS_PREFIX 
 
 # ---------------- Create Spoke NSG & AKS subnet ----------------
  az network nsg create -g $SPOKE_RG -n $AKS_NSG_NAME --tags $TAGS
@@ -220,7 +223,6 @@ az aks create \
   --workspace-resource-id $AKS_WORKSPACE_RESOURCE_ID \
   --tags $TAGS
 
-#https://go.microsoft.com/fwlink/?linkid=871071
 
 az sql mi create \
     --location $LOCATION \

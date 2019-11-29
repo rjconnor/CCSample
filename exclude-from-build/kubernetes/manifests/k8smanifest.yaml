@@ -93,6 +93,10 @@ metadata:
   namespace: sample
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true" # set to true for private IP
+
+    # important: the AKS Service Principle must have Network Contributor permissions to the RG that hosts the ILB VNET .e.g see below
+    # https://docs.microsoft.com/en-us/azure/aks/internal-lb
+    # az role assignment create --assignee caa68f4b-b41e-4d36-9000-c2a3f3606a19 --role "Network Contributor" --resource-group cc-uks-rsg-leap-sb-network
     service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "cc-uks-leap-sb-snet-ilb-01" # specify subnet
 spec:
   type: LoadBalancer
