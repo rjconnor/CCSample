@@ -30,6 +30,7 @@ GEN_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}"
 HUB_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-hub"
 AKS_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aks"
 ACR_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-acr"
+ACI_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-aci"
 NW_RG="${ORG}-${REGIONSHORT}-rsg-leap-${ENV}-network"
 
 WORKSPACE_NAME="${ORG}-${REGIONSHORT}-law-leap-${ENV}-001"
@@ -58,14 +59,18 @@ SQL_SUBNET_NAME="${ORG}-${REGIONSHORT}-subnet-sql-${ENV}"
 SQL_SUBNET_ADDRESS_PREFIX="10.125.6.64/27"
 SQL_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-sql"
 
+ACI_NAME="ccukssbaci"
+ACI_IMAGE="ccukssbacr.azurecr.io/sample:v0.0.1"
+ACI_DNS_PREFIX="cc-sb-sample"
+
+ACR_NAME="ccukssbacr"
+
 AKS_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-aks-01"
 AKS_SUBNET_ADDRESS_PREFIX="10.125.0.0/22"
 AKS_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-${ENV}-snet-aks-01"
 
-ILB_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-sql-mi-01"
+ILB_SUBNET_NAME="${ORG}-${REGIONSHORT}-leap-${ENV}-snet-ilb-01"
 ILB_SUBNET_ADDRESS_PREFIX="10.125.6.64/27"
-
-ACR_NAME="ccukssbacr"
 
 AKS_CLUSTER_NAME="${ORG}-${REGIONSHORT}-aks-leap-${ENV}-01"
 AKS_NODE_COUNT="1"
@@ -82,6 +87,7 @@ echo $HUB_RG
 echo $GEN_RG
 echo $AKS_RG
 echo $ACR_RG
+echo $ACI_RG
 echo $NW_RG
 echo $WORKSPACE_NAME
 echo $AKS_WORKSPACE_RESOURCE_ID
@@ -91,6 +97,9 @@ echo $GW_SUBNET_NAME
 echo $GW_NSG_NAME
 echo $SQL_SUBNET_NAME
 echo $SQL_NSG_NAME
+echo $ACI_NAME
+echo $ACI_IMAGE
+echo $ACI_DNS_PREFIX
 echo $AKS_SUBNET_NAME
 echo $ILB_SUBNET_NAME
 echo $AKS_NSG_NAME
@@ -198,6 +207,20 @@ az acr create \
   --sku Standard \
   --location $LOCATION \
   --subscription $SUBSCRIPTIONID \
+  --tags $TAGS
+
+# ---------------- Create ACI ------------------------
+az container create \
+  --name $ACI_NAME \
+  --resource-group $ACI_RG \
+  --cpu 1 \
+  --memory 1 \
+  --environment-variables key1=value1 key2=value2 \
+  --image $ACI_IMAGE \
+  --dns-name-label $ACI_DNS_PREFIX \
+  --location $LOCATION \
+  --subscription $SUBSCRIPTIONID \
+  --registry-password 1x0LDlmyEysrKuY/UmqpgnW2zIGbEB6v \
   --tags $TAGS
     
 # ------------ Create AKS Cluster --------------------
