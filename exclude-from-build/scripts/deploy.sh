@@ -62,6 +62,8 @@ SQL_NSG_NAME="${ORG}-${REGIONSHORT}-nsg-sql"
 ACI_NAME="ccukssbaci"
 ACI_IMAGE="ccukssbacr.azurecr.io/sample:v0.0.1"
 ACI_DNS_PREFIX="cc-sb-sample"
+ACI_REGISTRY_LOGIN_SERVER="ccukssbacr.azurecr.io"
+ACI_REGISTRY_USERNAME="ccukssbacr"
 
 ACR_NAME="ccukssbacr"
 
@@ -122,6 +124,9 @@ az group lock create --lock-type CanNotDelete -n lock -g $SPOKE_RG
 
 az group create --location $LOCATION --name $AKS_RG --tags $TAGS
 az group lock create --lock-type CanNotDelete -n lock -g $AKS_RG
+
+az group create --location $LOCATION --name $ACI_RG --tags $TAGS
+az group lock create --lock-type CanNotDelete -n lock -g $ACI_RG
 
 az group create --location $LOCATION --name $LOG_ANALYTICS_RG --tags $TAGS
 az group lock create --lock-type CanNotDelete -n lock -g $LOG_ANALYTICS_RG
@@ -220,8 +225,9 @@ az container create \
   --dns-name-label $ACI_DNS_PREFIX \
   --location $LOCATION \
   --subscription $SUBSCRIPTIONID \
-  --registry-password 1x0LDlmyEysrKuY/UmqpgnW2zIGbEB6v \
-  --tags $TAGS
+  --registry-login-server $ACI_REGISTRY_LOGIN_SERVER \
+  --registry-username $ACI_REGISTRY_USERNAME \
+  --registry-password 1x0LDlmyEysrKuY/UmqpgnW2zIGbEB6v 
     
 # ------------ Create AKS Cluster --------------------
 az aks create \
