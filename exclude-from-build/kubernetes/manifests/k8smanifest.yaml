@@ -62,9 +62,13 @@ spec:
         app: sample
     spec:
       serviceAccountName: sample
+      securityContext:
+        runAsUser: 0  #admin
       containers:
       - name: sample
         image: ccukssbacr.azurecr.io/sample:#{Build.BuildNumber}#
+        securityContext:
+          allowPrivilegeEscalation: true
         env:
         - name: version
           value: "1.0"
