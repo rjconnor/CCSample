@@ -46,6 +46,11 @@ metadata:
   namespace: sample
   labels:
     app: sample
+  annotations:
+    created: N Wardle
+    organisation: CDW
+    for: Clyde & Co
+    buildversion: #{Build.BuildNumber}#
 spec:
   replicas: 1
   selector:
