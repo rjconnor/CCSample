@@ -69,6 +69,8 @@ spec:
         image: ccukssbacr.azurecr.io/sample:#{Build.BuildNumber}#
         securityContext:
           allowPrivilegeEscalation: true
+          capabilities:
+            add: ["NET_ADMIN", "SYS_TIME"]
         env:
         - name: version
           value: "1.0"
